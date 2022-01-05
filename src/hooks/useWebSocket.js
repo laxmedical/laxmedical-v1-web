@@ -1,0 +1,104 @@
+import React, { useState, useEffect, useCallback } from 'react';
+
+export default function useWebSocket() {
+  const [socket, setSocket] = useState(null);
+  const [connectedPeers, setConnectedPeers] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const socketURL = 'wss://live.democracy.earth:5050';
+
+  const getPeers = () => JSON.stringify({ type: 'peers' });
+
+  const getChatMessages = () => JSON.stringify({ type: 'allMessages' });
+
+  const cleanUp = () => {
+    setConnectedPeers([]);
+    setMessages([]);
+  };
+
+  const sendMessage = useCallback((peerId, message) => {
+    const data = JSON.stringify({
+      type: 'message',
+      message: {
+        peerId,
+        message,
+        date: Date.now()
+      }
+    });
+    socket.send(data);
+  });
+
+  const connect = useCallback((peerId) => {
+    const data = JSON.stringify({
+      type: 'connect',
+      message: {
+        peerId
+      }
+    });
+    socket.send(data);
+  });
+
+  const disconnect = useCallback((peerId) => {
+    const data = JSON.stringify({
+      type: 'disconnect',
+      message: {
+        peerId
+      }
+    });
+    socket.send(data);
+  });
+
+  useEffect(() => {
+    const ws = socket || new WebSocket(socketURL);
+
+    setSocket(ws);
+
+    ws.onopen = (event) => {
+      console.log('connected');
+      ws.send(getPeers());
+      ws.send(getChatMessages());
+    };
+
+    ws.onclose = (event) => {
+      console.log('disconnected');
+      cleanUp();
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      switch (data.type) {
+        case 'message':
+          setMessages((messages) => [...messages, data.message]);
+          break;
+        case 'allMessages':
+          setMessages(data.allMessages);
+          break;
+        case 'peers':
+          setConnectedPeers(data.connectedPeers);
+          break;
+        case 'updatePeers':
+          ws.send(getPeers());
+          break;
+        default:
+          console.log('Message from websock not indentified');
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.log(error);
+    };
+
+    return () => {
+      ws.close();
+      cleanUp();
+    };
+  }, []);
+
+  return {
+    socket,
+    connectedPeers,
+    messages,
+    sendMessage,
+    connect,
+    disconnect
+  };
+}

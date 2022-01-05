@@ -1,0 +1,36 @@
+.conference-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-stream {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  height: 75px;
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-stream > video {
+  height: 75px;
+  height: 75px;
+}
+
+.listeners-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.listener-stream {
+  width: 24.5%;
+  height: 120px;
+}
+
+.listener-stream video {
+  width: 100%;
+  background: darkgrey;
+}

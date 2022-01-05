@@ -1,0 +1,22 @@
+.callme {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  -moz-border-radius: 50% !important;
+  -webkit-border-radius: 50% !important;
+  border-radius: 50% !important;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  background-color: rgb(207, 8, 8);
+  // background-color: rgb(8, 207, 8);
+}
+
+.callmeMain {
+  width: 40px;
+  height: 40px;
+  background-image: url("/static/images/phone.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 16px auto;
+}
