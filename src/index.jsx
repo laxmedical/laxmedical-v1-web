@@ -103,7 +103,7 @@ function Disconnect({ setConnectWebSocket, setWsState }) {
 
   return (
     <div className={classes.root}>
-      <PortableWifiOffIcon style={{ fontSize: 150 }} />
+      <PortableWifiOffIcon style={{ fontSize: 100 }} />
       <h3>{counter}s passées</h3>
       <p>Vous étes deconnectés du serveur !</p>
       <Button variant="outlined" color="primary" onClick={handleRetry}>
