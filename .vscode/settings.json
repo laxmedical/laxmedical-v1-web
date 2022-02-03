@@ -7,5 +7,6 @@
   },
   "editor.codeActionsOnSave": {
     "source.fixAll": true
-  }
+  },
+  "editor.fontFamily": "Fira Code"
 }

@@ -93,7 +93,7 @@ export default function Room({ myPeer, currentRoom, sendChatMessage }) {
   const [setLocalStream, localVideoRef, handleCanPlayLocal] = useStream();
 
   React.useEffect(() => {
-    console.log('je suis la');
+    console.log('je suis la dans room');
     console.log(currentRoom);
 
     if (currentRoom) {
@@ -125,13 +125,17 @@ export default function Room({ myPeer, currentRoom, sendChatMessage }) {
   const makeCall = () => {
     setLocalStream(localstream);
     console.log('make calling: ', currentRoom.room);
+    console.log(localstream);
     console.log(myPeer);
     if (myPeer) {
       setCallings(true);
-      join(currentRoom.room);
-      const thisCall = myPeer.call(currentRoom.room, localstream);
+      // join(currentRoom.room);
+      console.log(currentRoom.room);
+      const conn = myPeer.connect(currentRoom.room);
+      /*       const thisCall = myPeer.call(currentRoom.room, localstream);
       thisCall.on('stream', (remoteStream) => {
         console.log(`Connected to ${thisCall.peer}`);
+        console.log(remoteStream);
       });
 
       thisCall.on('close', () => {
@@ -140,7 +144,7 @@ export default function Room({ myPeer, currentRoom, sendChatMessage }) {
 
       thisCall.on('error', (error) => {
         console.log('call error', error);
-      });
+      }); */
     }
   };
   function join(remoteId) {

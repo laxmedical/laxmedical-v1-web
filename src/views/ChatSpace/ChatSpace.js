@@ -229,6 +229,7 @@ export default function ChatSpace({ addCallBack, deleteCallBack, webSocket, myPe
 
   return (
     <div>
+      {console.log('""""""""""""myPeer""""""""', myPeer)}
       <Grid container component={Paper} className={classes.root}>
         <CssBaseline />
         <Grid item xs={12} sm={8} md={4}>
@@ -238,29 +239,25 @@ export default function ChatSpace({ addCallBack, deleteCallBack, webSocket, myPe
                 ? personalsList.map((p, index) => {
                     const avatarLink = `http://${window.location.hostname}:8000${p.avatar}`;
                     return (
-                      <>
-                        <ListItem button selected={selectedRoom === p.id} onClick={(event) => handleListItemClick(event, p.id)}>
-                          <ListItemAvatar>
-                            {p.is_online ? (
-                              <StyledBadge
-                                overlap="circular"
-                                anchorOrigin={{
-                                  vertical: 'bottom',
-                                  horizontal: 'right'
-                                }}
-                                variant="dot"
-                              >
-                                <Avatar alt={null} src={avatarLink} />
-                              </StyledBadge>
-                            ) : (
+                      <ListItem key={index} button selected={selectedRoom === p.id} onClick={(event) => handleListItemClick(event, p.id)}>
+                        <ListItemAvatar>
+                          {p.is_online ? (
+                            <StyledBadge
+                              overlap="circular"
+                              anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right'
+                              }}
+                              variant="dot"
+                            >
                               <Avatar alt={null} src={avatarLink} />
-                            )}
-                          </ListItemAvatar>
-                          <ListItemText primary={p.username} secondary={p.last_message} />
-                        </ListItem>
-                        {/*
-            <Divider variant="inset" component="li" /> */}
-                      </>
+                            </StyledBadge>
+                          ) : (
+                            <Avatar alt={null} src={avatarLink} />
+                          )}
+                        </ListItemAvatar>
+                        <ListItemText primary={p.username} secondary={p.last_message} />
+                      </ListItem>
                     );
                   })
                 : null}

@@ -10,7 +10,7 @@ const config = { iceServers: [{ urls: ['stun:stun.l.google.com:19302'] }] };
 
 const localConfig = {
   host: window.location.hostname,
-  secure: true,
+  secure: false,
   port: 9000,
   path: '/peerjs'
 };
@@ -29,40 +29,33 @@ export default function usePeer(myId, addRemoteStream, removeRemoteStream) {
   };
 
   useEffect(() => {
-    console.log('receiving call from ');
-    import('peerjs')
-      .then(() => {
-        console.log('receiving call from  + call.peer', myId);
-        const peer = myPeer || new Peer(myId, localConfig);
+    console.log('Init Peer ------', myId);
+    const peer = myPeer || new Peer(myId, localConfig);
 
-        peer.on('open', () => {
-          setPeer(peer);
-          console.log(`open  peer  ${peer.id}`);
-          setMyPeerID(peer.id);
-        });
+    peer.on('open', () => {
+      setMyPeerID(peer.id);
+      setPeer(peer);
+      console.log(`open  peer  ${peer.id}`);
+    });
 
-        peer.on('connection', (conn) => {
-          console.log(`Connected to: ${conn.peer}`);
-        });
+    peer.on('connection', (conn) => {
+      console.log(`Connected to: ${conn.peer}`);
+    });
 
-        peer.on('disconnected', () => {
-          console.log('Peer desconnected');
-          cleanUp();
-        });
+    peer.on('disconnected', () => {
+      console.log('Peer desconnected');
+      cleanUp();
+    });
 
-        peer.on('close', () => {
-          console.log('Peer closed remotetly');
-          cleanUp();
-        });
+    peer.on('close', () => {
+      console.log('Peer closed remotetly');
+      cleanUp();
+    });
 
-        peer.on('error', (error) => {
-          console.log('peer error', error);
-          cleanUp();
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    peer.on('error', (error) => {
+      console.log('peer error', error);
+      cleanUp();
+    });
 
     return () => {
       cleanUp();

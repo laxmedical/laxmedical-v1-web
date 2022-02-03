@@ -102,6 +102,10 @@ export default function Main({ webSocket, ...rest }) {
   const [fixedClasses, setFixedClasses] = React.useState('dropdown');
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
+  const audioRef = useRef(null);
+  const remoteVideoRef = useRef();
+  const localVideoRef = useRef();
+
   const addCallBack = (callBack) => {
     console.log('add callBack fun !!!!!');
     callBackList.push(callBack);
@@ -113,12 +117,14 @@ export default function Main({ webSocket, ...rest }) {
     console.log(callBackList);
   };
 
-  const audioRef = useRef(null);
   React.useEffect(() => {
-    console.log('-------- main callBack useCallback ------------- ', myPeerID);
-    console.log(myPeer);
-    /*     if (myPeer) {
+    console.log('-------- main useEffect see peerId ------------- ', myPeerID);
+    console.log(myPeerID, myPeer);
+    if (myPeer) {
+      console.log('-------- myPeer.on(call) ------------- ');
       myPeer.on('call', (call) => {
+        console.log('-------- Receiving call from ------------- ', myPeerID);
+        call.answer();
         setBR({ open: true, message: `Vous avez un appel de ${call.peer}` });
         navigator.mediaDevices
           .getUserMedia(userMediaConfig)
@@ -126,8 +132,8 @@ export default function Main({ webSocket, ...rest }) {
             if (localstream && localVideoRef.current && !localVideoRef.current.srcObject) {
               localVideoRef.current.srcObject = localstream;
             }
-            setCall(call);
-            call.answer(localstream);
+            // setCall(call);
+            // call.answer(localstream);
             call.on('stream', (remoteStream) => {
               if (remoteStream && remoteVideoRef.current && !remoteVideoRef.current.srcObject) {
                 remoteVideoRef.current.srcObject = remoteStream;
@@ -146,11 +152,12 @@ export default function Main({ webSocket, ...rest }) {
             console.log(error);
           });
       });
-    } */
+    }
     return () => {
       deleteCallBack('NotificationSound');
     };
   }, [myPeer]);
+
   React.useEffect(() => {
     console.log('-------- main callBack useCallback ------------- !!!!!');
     console.log(myPeer);
@@ -186,6 +193,13 @@ export default function Main({ webSocket, ...rest }) {
       });
     };
   }, [webSocket.onmessage]);
+
+  const handleCanPlayRemote = () => {
+    remoteVideoRef.current.play();
+  };
+  const handleCanPlayLocal = () => {
+    localVideoRef.current.play();
+  };
 
   const handleImageClick = (image) => {
     setImage(image);
@@ -232,7 +246,7 @@ export default function Main({ webSocket, ...rest }) {
       {console.log('render main')}
       <Sidebar
         routes={routes}
-        logoText="lax_medic"
+        logoText="Laxmedical"
         logo={logo}
         image={image}
         handleDrawerToggle={handleDrawerToggle}
@@ -274,6 +288,14 @@ export default function Main({ webSocket, ...rest }) {
       <audio ref={audioRef}>
         <source src={audio} />
       </audio>
+      <div style={{ display: 'flex' }}>
+        <div>
+          <video ref={remoteVideoRef} onCanPlay={handleCanPlayRemote} autoPlay playsInline muted />
+        </div>
+        <div>
+          <video ref={localVideoRef} onCanPlay={handleCanPlayLocal} autoPlay playsInline muted />
+        </div>
+      </div>
     </div>
   );
 }
